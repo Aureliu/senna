@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SENNA_CHK.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_Hash.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_NER.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_nn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_POS.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_PSG.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_PT0.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_Scores2Treillis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_SRL.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_Tokenizer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_Treillis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SENNA_VBS.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SENNA_CHK.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_Hash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_NER.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_nn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_POS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_PSG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_PT0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_Scores2Treillis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_SRL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_Tokenizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_Treillis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SENNA_VBS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="doc\denied.html" />
+    <None Include="doc\download.html" />
+    <None Include="doc\index.html" />
+    <None Include="doc\license.html" />
+  </ItemGroup>
+</Project>

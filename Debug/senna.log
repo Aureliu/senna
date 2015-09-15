@@ -1,0 +1,48 @@
+﻿Build started 9/14/2015 9:10:29 PM.
+     1>Project "D:\GitHub\senna\senna.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt SENNA_CHK.c SENNA_Hash.c SENNA_main.c SENNA_NER.c SENNA_nn.c SENNA_POS.c SENNA_PSG.c SENNA_PT0.c SENNA_Scores2Treillis.c SENNA_SRL.c SENNA_Tokenizer.c SENNA_Treillis.c SENNA_utils.c SENNA_VBS.c
+         SENNA_VBS.c
+         SENNA_utils.c
+     1>SENNA_utils.c(52): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112) : see declaration of 'strcpy'
+     1>SENNA_utils.c(53): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112) : see declaration of 'strcpy'
+     1>SENNA_utils.c(56): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+         SENNA_Treillis.c
+         SENNA_Tokenizer.c
+         SENNA_SRL.c
+         SENNA_Scores2Treillis.c
+         SENNA_PT0.c
+         SENNA_PSG.c
+         SENNA_POS.c
+         SENNA_nn.c
+         SENNA_NER.c
+         SENNA_main.c
+         SENNA_Hash.c
+     1>SENNA_Hash.c(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112) : see declaration of 'strcpy'
+         SENNA_CHK.c
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\GitHub\senna\Debug\senna.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\GitHub\senna\Debug\senna.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\GitHub\senna\Debug\senna.lib" /MACHINE:X86 Debug\SENNA_CHK.obj
+         Debug\SENNA_Hash.obj
+         Debug\SENNA_main.obj
+         Debug\SENNA_NER.obj
+         Debug\SENNA_nn.obj
+         Debug\SENNA_POS.obj
+         Debug\SENNA_PSG.obj
+         Debug\SENNA_PT0.obj
+         Debug\SENNA_Scores2Treillis.obj
+         Debug\SENNA_SRL.obj
+         Debug\SENNA_Tokenizer.obj
+         Debug\SENNA_Treillis.obj
+         Debug\SENNA_utils.obj
+         Debug\SENNA_VBS.obj
+         senna.vcxproj -> D:\GitHub\senna\Debug\senna.exe
+     1>Done Building Project "D:\GitHub\senna\senna.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.36
