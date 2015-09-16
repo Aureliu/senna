@@ -29,6 +29,7 @@ static void help(const char *name)		//@AureDi Names are the arguments.
   printf(" Takes sentence (one line per sentence) on stdin\n");
   printf(" Outputs tags on stdout\n");
   printf(" Typical usage: %s [options] < inputfile.txt > outputfile.txt\n", name);
+  //@AureDi  < means input, we will use inputfile to instead of stdin. > means output, we will use outfile to instead of stdout.
   printf("\n");
   printf("Display options:\n");
   printf("  -h             Display this help\n");
@@ -128,9 +129,9 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
 
   SENNA_set_verbose_mode(opt_verbose);		//@AureDi Set the verbose mode = 1.
 
-  if(!opt_pos && !opt_chk && !opt_ner && !opt_srl && !opt_psg) /* the user does not know what he wants... */
-    opt_pos = opt_chk = opt_ner = opt_srl = opt_psg = 1;     /* so give him everything (aren't we insane?) */
-
+  if (!opt_pos && !opt_chk && !opt_ner && !opt_srl && !opt_psg) /* the user does not know what he wants... */
+	  //opt_pos = opt_chk = opt_ner = opt_srl = opt_psg = 1;     /* so give him everything (aren't we insane?) */
+	  opt_srl = 1;  // We are just interested in SRL.
 
   /* the real thing */
   {											//@AureDi define a domain or field
@@ -174,7 +175,7 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
     SENNA_PT0 *pt0 = SENNA_PT0_new(opt_path, "data/pt0.dat");
     SENNA_NER *ner = SENNA_NER_new(opt_path, "data/ner.dat");
     SENNA_VBS *vbs = SENNA_VBS_new(opt_path, "data/vbs.dat");
-    SENNA_SRL *srl = SENNA_SRL_new(opt_path, "data/srl.dat");
+    SENNA_SRL *srl = SENNA_SRL_new(opt_path, "data/srl.dat");	//@AureDi This is used for labeling.
     SENNA_PSG *psg = SENNA_PSG_new(opt_path, "data/psg.dat");
 
     SENNA_Tokenizer *tokenizer = SENNA_Tokenizer_new(word_hash, caps_hash, suff_hash, gazt_hash, gazl_hash, gazm_hash, gazo_hash, gazp_hash, opt_usrtokens);
@@ -194,8 +195,12 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
 
     SENNA_message("ready");
 
-    while(fgets(sentence, MAX_SENTENCE_SIZE, stdin))
-    {
+/*@AureDi  The stdin is directed to the keyboard.  The program will input sentence from keyboard.
+We can also use ....  myapplication < example.txt  .... to read sentence.
+The content of the file example.txt as the primary source of data for myapplication instead of the console keyboard.
+*/
+
+    while(fgets(sentence, MAX_SENTENCE_SIZE, stdin))	    {
       SENNA_Tokens* tokens = SENNA_Tokenizer_tokenize(tokenizer, sentence);
     
       if(tokens->n == 0)
@@ -210,7 +215,7 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
         ner_labels = SENNA_NER_forward(ner, tokens->word_idx, tokens->caps_idx, tokens->gazl_idx, tokens->gazm_idx, tokens->gazo_idx, tokens->gazp_idx, tokens->n);
       if(opt_srl)
       {
-        if(opt_usrvbs)
+        if(opt_usrvbs)			//@AureDi Use user's verbs (given in <file>) instead of SENNA verbs for SRL task.
         {
           vbs_labels = SENNA_realloc(vbs_labels, sizeof(int), tokens->n);
           n_verbs = 0;
@@ -226,7 +231,7 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
           if(strlen(target_vb) > 0)
             SENNA_error("sentence size does not match in user verbs file");
         }
-        else if(opt_posvbs)
+        else if(opt_posvbs)		//@AureDi  Use verbs outputed by the POS tagger.
         {
           vbs_labels = SENNA_realloc(vbs_labels, sizeof(int), tokens->n);
           n_verbs = 0;
@@ -238,7 +243,7 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
         }
         else
         {
-          vbs_labels = SENNA_VBS_forward(vbs, tokens->word_idx, tokens->caps_idx, pos_labels, tokens->n);
+          vbs_labels = SENNA_VBS_forward(vbs, tokens->word_idx, tokens->caps_idx, pos_labels, tokens->n);	//@AureDi   SENNA_VBS *vbs = SENNA_VBS_new(opt_path, "data/vbs.dat");
           n_verbs = 0;
           for(i = 0; i < tokens->n; i++)
           {
@@ -248,7 +253,7 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
         }
       }
 
-      if(opt_srl)
+      if(opt_srl) 
         srl_labels = SENNA_SRL_forward(srl, tokens->word_idx, tokens->caps_idx, pt0_labels, vbs_labels, tokens->n);
 
       if(opt_psg)
@@ -275,7 +280,7 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
       for(i = 0; i < tokens->n; i++)
       {
         if(!opt_notokentags)
-          printf("%15s", tokens->words[i]);
+          printf("%15s", tokens->words[i]);		//@AureDi The maximum length of the words is 15.
         if(opt_offsettags)
           printf("\t%d %d", tokens->start_offset[i], tokens->end_offset[i]);
         if(opt_pos)
@@ -288,7 +293,7 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
         {
           printf("\t%15s", (vbs_labels[i] ? tokens->words[i] : "-"));
           for(j = 0; j < n_verbs; j++)
-            printf("\t%10s", SENNA_Hash_key(srl_hash, srl_labels[j][i]));
+            printf("\t%10s", SENNA_Hash_key(srl_hash, srl_labels[j][i]));		//@ srl_hash stores the label for srl.
         }
         if(opt_psg) /* last, can be long */
         {

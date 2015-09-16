@@ -27,6 +27,7 @@ SENNA_Hash* SENNA_Hash_new(const char *path, const char *filename)
   while(fgets(key, MAX_KEY_SIZE, f))
   {
     int key_size = strlen(key);
+	//@ We can assume that the length of each line is not exceeded 255.
     key[key_size-1] = '\0'; /* discard the newline */	//@AureDi \0 is the sign of the end. Because this method is applied to process single word, so we can assume the end word is newline character .
     keys[n_keys] = SENNA_malloc(key_size, sizeof(char));
     strcpy(keys[n_keys], key);
@@ -82,7 +83,7 @@ void SENNA_Hash_convert_IOBES_to_IOB(SENNA_Hash *hash)
   for(i = 0; i < hash->size; i++)
   {
     char *key = hash->keys[i];
-    if(strlen(key) < 3)
+    if(strlen(key) < 3)	//@ The length of ES is exceeded 2. 
       continue;
 
     if( (key[0] == 'E') && (key[1] == '-') )

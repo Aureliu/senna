@@ -2,6 +2,7 @@
 #include "SENNA_utils.h"
 #include "SENNA_nn.h"
 
+//@AureDi   vbs_labels = SENNA_VBS_forward(vbs, tokens->word_idx, tokens->caps_idx, pos_labels, tokens->n);
 int* SENNA_VBS_forward(SENNA_VBS *vbs, const int *sentence_words, const int *sentence_caps, const int *sentence_posl, int sentence_size)
 {
   int idx;
@@ -34,9 +35,8 @@ SENNA_VBS* SENNA_VBS_new(const char *path, const char *subpath)
   float dummy;
 
   f = SENNA_fopen(path, subpath, "rb");
-
   SENNA_fread(&vbs->window_size, sizeof(int), 1, f);
-  SENNA_fread_tensor_2d(&vbs->ll_word_weight, &vbs->ll_word_size, &vbs->ll_word_max_idx, f);
+  SENNA_fread_tensor_2d(&vbs->ll_word_weight, &vbs->ll_word_size, &vbs->ll_word_max_idx, f);	//@AureDi Read a 2 dimension tensor or array.
   SENNA_fread_tensor_2d(&vbs->ll_caps_weight, &vbs->ll_caps_size, &vbs->ll_caps_max_idx, f);
   SENNA_fread_tensor_2d(&vbs->ll_posl_weight, &vbs->ll_posl_size, &vbs->ll_posl_max_idx, f);
   SENNA_fread_tensor_2d(&vbs->l1_weight, &vbs->input_state_size, &vbs->hidden_state_size, f);
