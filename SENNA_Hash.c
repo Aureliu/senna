@@ -9,24 +9,25 @@ SENNA_Hash* SENNA_Hash_new(const char *path, const char *filename)
   SENNA_Hash *hash;
   char **keys = NULL;
   int n_keys;
-  char key[MAX_KEY_SIZE];
+  char key[MAX_KEY_SIZE];		//@AureDi temporary array of key, which stores the characters from filenames.
   int i;
 
   SENNA_message("loading hash: %s%s", (path ? path : ""), (filename ? filename : ""));
 
+  //@AureDi Count the number of  key (maximum is 256 characters)
   f = SENNA_fopen(path, filename, "rt"); /* the t is to comply with Windows */
   n_keys = 0;
   while(fgets(key, MAX_KEY_SIZE, f))
-    n_keys++;
+    n_keys++;			//@AureDi Remember reading how many times
   SENNA_fclose(f);
-  keys = SENNA_malloc(n_keys, sizeof(char*));
+  keys = SENNA_malloc(n_keys, sizeof(char*));	//@AureDi 
 
   f = SENNA_fopen(path, filename, "rt"); /* the t is to comply with Windows */
   n_keys = 0;
   while(fgets(key, MAX_KEY_SIZE, f))
   {
     int key_size = strlen(key);
-    key[key_size-1] = '\0'; /* discard the newline */
+    key[key_size-1] = '\0'; /* discard the newline */	//@AureDi \0 is the sign of the end. Because this method is applied to process single word, so we can assume the end word is newline character .
     keys[n_keys] = SENNA_malloc(key_size, sizeof(char));
     strcpy(keys[n_keys], key);
     n_keys++;
@@ -34,13 +35,13 @@ SENNA_Hash* SENNA_Hash_new(const char *path, const char *filename)
   SENNA_fclose(f);
 
   hash = SENNA_malloc(sizeof(SENNA_Hash), 1);
-  hash->keys = keys;
-  hash->size = n_keys;
-  hash->is_admissible_key = NULL;
+  hash->keys = keys;	//@AureDi keys is the pointer of second array.
+  hash->size = n_keys;	//@AureDi n_keys is the length of second aaay
+  hash->is_admissible_key = NULL;	//@AUreDi admissible
 
   /* sorted or unsorted hash ? */
   /* (unsorted cannot return an index for a key) */
-  hash->is_sorted = 1;
+  hash->is_sorted = 1;		// uper is roght
   for(i = 0; i < n_keys-1; i++)
   {
     if(strcmp(keys[i], keys[i+1]) >= 0)
@@ -59,16 +60,16 @@ SENNA_Hash *SENNA_Hash_new_with_admissible_keys(const char *path, const char *fi
   FILE *f;
   int admissiblekeyssize = 0;
 
-  f = SENNA_fopen(path, admissible_keys_filename, "rb");
-  SENNA_fseek(f, 0, SEEK_END);
-  admissiblekeyssize = SENNA_ftell(f);
+  f = SENNA_fopen(path, admissible_keys_filename, "rb");	//@Aure b means that the file is binary file.
+  SENNA_fseek(f, 0, SEEK_END);		//@Aure   #define SEEK_END    2    Reposition stream position indicator
+  admissiblekeyssize = SENNA_ftell(f);	//@  Get current position in stream
 
   if(admissiblekeyssize != hash->size)
     SENNA_error("inconsistent hash and admissible key files");
 
   SENNA_fseek(f, 0, SEEK_SET);
   hash->is_admissible_key = SENNA_malloc(sizeof(char), admissiblekeyssize);
-  SENNA_fread(hash->is_admissible_key, 1, admissiblekeyssize, f);
+  SENNA_fread(hash->is_admissible_key, 1, admissiblekeyssize, f);		//@ Read block of data from stream to char array is_admissible_key.
   SENNA_fclose(f);
 
   return hash;

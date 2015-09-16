@@ -18,13 +18,13 @@
 #define MAX_SENTENCE_SIZE 1024
 #define MAX_TARGET_VB_SIZE 256
 
-static void help(const char *name)
+static void help(const char *name)		//@AureDi Names are the arguments.
 {
   printf("\n");
   printf("SENNA Tagger (POS - CHK - NER - SRL)\n");
   printf("(c) Ronan Collobert 2009\n");
   printf("\n");
-  printf("Usage: %s [options]\n", name);
+  printf("Usage: %s [options]\n", name);	//@AureDi %s is specifier (subsequences beginning with %), name is inserted in the resulting string replacing their respective specifiers %s.
   printf("\n");
   printf(" Takes sentence (one line per sentence) on stdin\n");
   printf(" Outputs tags on stdout\n");
@@ -35,7 +35,7 @@ static void help(const char *name)
   printf("  -verbose       Display model informations on stderr\n");
   printf("  -notokentags   Do not output tokens\n");
   printf("  -offsettags    Output start/end offset of each token\n");
-  printf("  -iobtags       Output IOB tags instead of IOBES\n");
+  printf("  -iobtags       Output IOB tags instead of IOBES\n");		//@AureDi S: single
   printf("  -brackettags   Output 'bracket' tags instead of IOBES\n");
   printf("\n");
   printf("Data options:\n");
@@ -59,7 +59,7 @@ static void help(const char *name)
   exit(-1);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is 
 {
   int i, j;
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
   int opt_psg = 0;
   FILE *opt_usrvbs = NULL;
 
-  for(i = 1; i < argc; i++)
+  for(i = 1; i < argc; i++)	//@AureDi input the parameters
   {
     if(!strcmp(argv[i], "-verbose"))
       opt_verbose = 1;
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
       opt_brackettags = 1;
     else if(!strcmp(argv[i], "-path"))
     {
-      if(i+1 >= argc)
+      if(i+1 >= argc)	//@AureDi If you select -path but there is no path, please provide a path. Or, read the path and plus i. 
         SENNA_error("please provide a path for the -path option");
       opt_path = argv[i+1];
       i++;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
     {
       if(i+1 >= argc)
         SENNA_error("please provide a filename for the -usrvbs option");
-      opt_usrvbs = SENNA_fopen(NULL, argv[i+1], "rb");
+      opt_usrvbs = SENNA_fopen(NULL, argv[i+1], "rb");		//@AureDi Open a new file and return the FILE pointer associated with a stream.
       i++;
     }
     else if(!strcmp(argv[i], "-pos"))
@@ -126,18 +126,18 @@ int main(int argc, char *argv[])
     }
   }
 
-  SENNA_set_verbose_mode(opt_verbose);
+  SENNA_set_verbose_mode(opt_verbose);		//@AureDi Set the verbose mode = 1.
 
   if(!opt_pos && !opt_chk && !opt_ner && !opt_srl && !opt_psg) /* the user does not know what he wants... */
     opt_pos = opt_chk = opt_ner = opt_srl = opt_psg = 1;     /* so give him everything (aren't we insane?) */
 
 
   /* the real thing */
-  {
+  {											//@AureDi define a domain or field
     char sentence[MAX_SENTENCE_SIZE];
     char target_vb[MAX_TARGET_VB_SIZE];
     int *chk_labels = NULL;
-    int *pt0_labels = NULL;
+    int *pt0_labels = NULL;					//@AureDi parser tree
     int *pos_labels = NULL;
     int *ner_labels = NULL;
     int *vbs_labels = NULL;
@@ -149,8 +149,8 @@ int main(int argc, char *argv[])
     int n_verbs = 0;
     
     /* inputs */
-    SENNA_Hash *word_hash = SENNA_Hash_new(opt_path, "hash/words.lst");
-    SENNA_Hash *caps_hash = SENNA_Hash_new(opt_path, "hash/caps.lst");
+	SENNA_Hash *word_hash = SENNA_Hash_new(opt_path, "hash/words.lst");		//@AureDi 130, 000 words. So, it's the dictionary (Wikipedia + Reuters) size of 130,000 words.
+    SENNA_Hash *caps_hash = SENNA_Hash_new(opt_path, "hash/caps.lst");		//@AureDi “caps” feature
     SENNA_Hash *suff_hash = SENNA_Hash_new(opt_path, "hash/suffix.lst");
     SENNA_Hash *gazt_hash = SENNA_Hash_new(opt_path, "hash/gazetteer.lst");
 
