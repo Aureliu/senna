@@ -5,6 +5,8 @@
 
 /* treillis */
 
+//@AureDi This is used for syntactic parser.
+
 SENNA_Treillis* SENNA_Treillis_new(void)
 {
   SENNA_Treillis *treillis;

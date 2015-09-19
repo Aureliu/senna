@@ -103,11 +103,12 @@ void SENNA_fread_tensor_1d(float **ptr, int *n_row, FILE *stream)
   SENNA_fread(*ptr, sizeof(float), *n_row, stream);
 }
 
-void SENNA_fread_tensor_2d(float **ptr, int *n_row, int *n_column, FILE *stream)
-{
+//@AureDi  SENNA_fread_tensor_2d(&vbs->ll_word_weight, &vbs->ll_word_size, &vbs->ll_word_max_idx, f);
+void SENNA_fread_tensor_2d(float **ptr, int *n_row, int *n_column, FILE *stream)	//@AureDi We use ptr to imitate reference in ANSI C.
+{							//@AureDi **ptr = float * (*ptr)
   SENNA_fread(n_row, sizeof(int), 1, stream);
   SENNA_fread(n_column, sizeof(int), 1, stream);
-  *ptr = SENNA_malloc(sizeof(float), (*n_row)*(*n_column));
+  *ptr = SENNA_malloc(sizeof(float), (*n_row)*(*n_column));		//@AureDi Store 2 dimension array in 1 dimension array.
   SENNA_fread(*ptr, sizeof(float), (*n_row)*(*n_column), stream);
 }
 
@@ -143,7 +144,7 @@ void* SENNA_malloc(size_t size, size_t nitems)
 
 void* SENNA_realloc(void *ptr, size_t size, size_t nitems)
 {
-  ptr = realloc(ptr, size*nitems);
+  ptr = realloc(ptr, size*nitems);		//@AUreDi Changes the size of the memory block pointed to by ptr.
   if(!ptr)
     SENNA_error("memory allocation error [%ldGB] -- buy new RAM", size << 30);
   return ptr;

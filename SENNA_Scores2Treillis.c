@@ -2,6 +2,8 @@
 #include "SENNA_utils.h"
 #include "SENNA_Scores2Treillis.h"
 
+//@AureDi This is used for syntactic parser.
+
 void SENNA_Treillis_buildfromscore(SENNA_Treillis *treillis, float *score, float *start, float *trans, int N, int T)
 {
   SENNA_TreillisNode *node_i, *node_j;

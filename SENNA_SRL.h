@@ -11,9 +11,9 @@ typedef struct SENNA_SRL_
     int ll_caps_max_idx;
     int ll_chkl_size;
     int ll_chkl_max_idx;
-    int ll_posv_size;
+    int ll_posv_size;		//@AureDi  the chosen verb at position posv
     int ll_posv_max_idx;
-    int ll_posw_size;
+    int ll_posw_size;		//@AureDi  the word to tag ar position posw
     int ll_posw_max_idx;
     int input_state_size;
     int hidden_state1_size;

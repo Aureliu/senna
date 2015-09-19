@@ -4,6 +4,7 @@
 
 int* SENNA_PT0_forward(SENNA_PT0 *pt0, const int *sentence_words, const int *sentence_caps, const int *sentence_posl, int sentence_size)
 {
+//@AureDi  pt0_labels = SENNA_PT0_forward(pt0, tokens->word_idx, tokens->caps_idx, pos_labels, tokens->n);
   int idx;
 
   pt0->input_state = SENNA_realloc(pt0->input_state, sizeof(float), (sentence_size+pt0->window_size-1)*(pt0->ll_word_size+pt0->ll_caps_size+pt0->ll_posl_size));

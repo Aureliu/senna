@@ -19,6 +19,7 @@
 #include "Accelerate/Accelerate.h"
 #endif
 
+//@AureDi  SENNA_nn_lookup(vbs->input_state, vbs->ll_word_size + vbs->ll_caps_size + vbs->ll_posl_size, vbs->ll_word_weight, vbs->ll_word_size, vbs->ll_word_max_idx, sentence_words, sentence_size, vbs->ll_word_padding_idx, (vbs->window_size - 1) / 2);
 void SENNA_nn_lookup(float *dest, int dest_stride, const float *wordweights, int wordsize, int maxwordidx, const int *wordindices, int nword, int padidx, int npad)
 {
   int i;
@@ -28,7 +29,7 @@ void SENNA_nn_lookup(float *dest, int dest_stride, const float *wordweights, int
 
   for(i = 0; i < npad; i++)
     memcpy(dest+i*dest_stride, wordweights+padidx*wordsize, wordsize*sizeof(float));
-
+  //@AureDi  Wordsize is the word dimention. 
   for(i = 0; i < nword; i++)
   {
     int wordidx = wordindices[i];

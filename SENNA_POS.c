@@ -5,7 +5,7 @@
 int* SENNA_POS_forward(SENNA_POS *pos, const int *sentence_words, const int *sentence_caps, const int *sentence_suff, int sentence_size)
 {
   int idx;
-
+  //@AureDi sentence_size+pos->window_size-1: broad convolution			(pos->ll_word_size+pos->ll_caps_size+pos->ll_suff_size): feature length
   pos->input_state = SENNA_realloc(pos->input_state, sizeof(float), (sentence_size+pos->window_size-1)*(pos->ll_word_size+pos->ll_caps_size+pos->ll_suff_size));
   pos->output_state = SENNA_realloc(pos->output_state, sizeof(float), sentence_size*pos->output_state_size);
   

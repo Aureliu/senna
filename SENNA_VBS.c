@@ -7,7 +7,7 @@ int* SENNA_VBS_forward(SENNA_VBS *vbs, const int *sentence_words, const int *sen
 {
   int idx;
 
-  vbs->input_state = SENNA_realloc(vbs->input_state, sizeof(float), (sentence_size+vbs->window_size-1)*(vbs->ll_word_size+vbs->ll_caps_size+vbs->ll_posl_size));
+  vbs->input_state = SENNA_realloc(vbs->input_state, sizeof(float), (sentence_size+vbs->window_size-1)*(vbs->ll_word_size+vbs->ll_caps_size+vbs->ll_posl_size));    //@AureDi Store the embedding input.
   vbs->output_state = SENNA_realloc(vbs->output_state, sizeof(float), sentence_size*vbs->output_state_size);
   
   SENNA_nn_lookup(vbs->input_state,                                     vbs->ll_word_size+vbs->ll_caps_size+vbs->ll_posl_size, vbs->ll_word_weight, vbs->ll_word_size, vbs->ll_word_max_idx, sentence_words, sentence_size, vbs->ll_word_padding_idx, (vbs->window_size-1)/2);
@@ -35,9 +35,9 @@ SENNA_VBS* SENNA_VBS_new(const char *path, const char *subpath)
   float dummy;
 
   f = SENNA_fopen(path, subpath, "rb");
-  SENNA_fread(&vbs->window_size, sizeof(int), 1, f);
-  SENNA_fread_tensor_2d(&vbs->ll_word_weight, &vbs->ll_word_size, &vbs->ll_word_max_idx, f);	//@AureDi Read a 2 dimension tensor or array.
-  SENNA_fread_tensor_2d(&vbs->ll_caps_weight, &vbs->ll_caps_size, &vbs->ll_caps_max_idx, f);
+  SENNA_fread(&vbs->window_size, sizeof(int), 1, f);		//@AureDi Read the size of windows.
+  SENNA_fread_tensor_2d(&vbs->ll_word_weight, &vbs->ll_word_size, &vbs->ll_word_max_idx, f);	//@AureDi Read a size*idx array.
+  SENNA_fread_tensor_2d(&vbs->ll_caps_weight, &vbs->ll_caps_size, &vbs->ll_caps_max_idx, f);	//@AureDi Because there is no reference in ANSI C, we use second pointer to change the parameter. 
   SENNA_fread_tensor_2d(&vbs->ll_posl_weight, &vbs->ll_posl_size, &vbs->ll_posl_max_idx, f);
   SENNA_fread_tensor_2d(&vbs->l1_weight, &vbs->input_state_size, &vbs->hidden_state_size, f);
   SENNA_fread_tensor_1d(&vbs->l1_bias, &vbs->hidden_state_size, f);

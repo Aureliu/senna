@@ -1,7 +1,7 @@
 #include "SENNA_SRL.h"
 #include "SENNA_utils.h"
 #include "SENNA_nn.h"
-
+//@AureDi   srl_labels = SENNA_SRL_forward(srl, tokens->word_idx, tokens->caps_idx, pt0_labels, vbs_labels, tokens->n);
 int** SENNA_SRL_forward(SENNA_SRL *srl, const int *sentence_words, const int *sentence_caps, const int *sentence_chkl, const int *sentence_isvb, int sentence_size)
 {
   int vbidx;
@@ -9,7 +9,7 @@ int** SENNA_SRL_forward(SENNA_SRL *srl, const int *sentence_words, const int *se
   int n_verbs = 0;
   int i;
 
-  srl->sentence_posv = SENNA_realloc(srl->sentence_posv, sizeof(int), sentence_size+srl->window_size-1);
+  srl->sentence_posv = SENNA_realloc(srl->sentence_posv, sizeof(int), sentence_size+srl->window_size-1);	//@AureDi  3-1=2
   srl->sentence_posw = SENNA_realloc(srl->sentence_posw, sizeof(int), sentence_size+srl->window_size-1);
 
   srl->input_state_wcc = SENNA_realloc(srl->input_state_wcc, sizeof(float), (sentence_size+srl->window_size-1)*(srl->ll_word_size+srl->ll_caps_size+srl->ll_chkl_size));
@@ -21,9 +21,10 @@ int** SENNA_SRL_forward(SENNA_SRL *srl, const int *sentence_words, const int *se
   srl->hidden_state1 = SENNA_realloc(srl->hidden_state1, sizeof(float), sentence_size*srl->hidden_state1_size);
   srl->hidden_state2 = SENNA_realloc(srl->hidden_state2, sizeof(float), srl->hidden_state1_size);
   srl->hidden_state3 = SENNA_realloc(srl->hidden_state3, sizeof(float), srl->hidden_state3_size);
-  srl->output_state = SENNA_realloc(srl->output_state, sizeof(float), sentence_size*srl->output_state_size);
+  srl->output_state = SENNA_realloc(srl->output_state, sizeof(float), sentence_size*srl->output_state_size);	//@AureDi Store for each word in the sentence.
 
   /* words and caps are common for all words and all verbs */
+  //@AureDi  Successively initialize the word, cap, chk, pos ... for each word. 
   SENNA_nn_lookup(srl->input_state_wcc,                                     srl->ll_word_size+srl->ll_caps_size+srl->ll_chkl_size, srl->ll_word_weight, srl->ll_word_size, srl->ll_word_max_idx, sentence_words, sentence_size, srl->ll_word_padding_idx, (srl->window_size-1)/2);
   SENNA_nn_lookup(srl->input_state_wcc+srl->ll_word_size,                   srl->ll_word_size+srl->ll_caps_size+srl->ll_chkl_size, srl->ll_caps_weight, srl->ll_caps_size, srl->ll_caps_max_idx, sentence_caps,  sentence_size, srl->ll_caps_padding_idx, (srl->window_size-1)/2);
   SENNA_nn_lookup(srl->input_state_wcc+srl->ll_word_size+srl->ll_caps_size, srl->ll_word_size+srl->ll_caps_size+srl->ll_chkl_size, srl->ll_chkl_weight, srl->ll_chkl_size, srl->ll_chkl_max_idx, sentence_chkl,  sentence_size, srl->ll_chkl_padding_idx, (srl->window_size-1)/2);
@@ -31,9 +32,9 @@ int** SENNA_SRL_forward(SENNA_SRL *srl, const int *sentence_words, const int *se
   SENNA_nn_temporal_convolution(srl->hidden_state1_wcc, srl->hidden_state1_size, srl->l1_weight_wcc, srl->l1_bias, srl->input_state_wcc, srl->ll_word_size+srl->ll_caps_size+srl->ll_chkl_size, sentence_size+srl->window_size-1, srl->window_size);
   
   /* for all verbs... */
-  for(vbidx = 0; vbidx < sentence_size; vbidx++)
+  for(vbidx = 0; vbidx < sentence_size; vbidx++)		//@AureDi  sentence_size = tokens->n
   {
-    if(!sentence_isvb[vbidx])
+    if(!sentence_isvb[vbidx])		//@AureDi  sentence_isvb = vbs_labels
       continue;
 
     SENNA_nn_distance(srl->sentence_posv, vbidx, srl->ll_posv_max_idx, sentence_size, (srl->window_size-1)/2);
@@ -93,8 +94,11 @@ SENNA_SRL* SENNA_SRL_new(const char *path, const char *subpath)
   SENNA_fread_tensor_2d(&srl->ll_posv_weight, &srl->ll_posv_size, &srl->ll_posv_max_idx, f);
   SENNA_fread_tensor_2d(&srl->ll_posw_weight, &srl->ll_posw_size, &srl->ll_posw_max_idx, f);
   SENNA_fread_tensor_2d(&srl->l1_weight_wcc, &dummy_size, &srl->hidden_state1_size, f);
+  SENNA_message("srl: dummy_size", dummy_size);		//@AureDi I add to read the message.
   SENNA_fread_tensor_2d(&srl->l1_weight_pv, &dummy_size, &srl->hidden_state1_size, f);
+  SENNA_message("srl: dummy_size", dummy_size);		//@AureDi I add to read the message.
   SENNA_fread_tensor_2d(&srl->l1_weight_pw, &dummy_size, &srl->hidden_state1_size, f);
+  SENNA_message("srl: dummy_size", dummy_size);		//@AureDi I add to read the message.
   SENNA_fread_tensor_1d(&srl->l1_bias, &srl->hidden_state1_size, f);
   SENNA_fread_tensor_2d(&srl->l3_weight, &srl->hidden_state1_size, &srl->hidden_state3_size, f);
   SENNA_fread_tensor_1d(&srl->l3_bias, &srl->hidden_state3_size, f);
@@ -131,18 +135,18 @@ SENNA_SRL* SENNA_SRL_new(const char *path, const char *subpath)
   srl->labels_size = 0;
 
   /* some info if you want verbose */
-  SENNA_message("srl: window size: %d", srl->window_size);
-  SENNA_message("srl: vector size in word lookup table: %d", srl->ll_word_size);
-  SENNA_message("srl: word lookup table size: %d", srl->ll_word_max_idx);
-  SENNA_message("srl: vector size in caps lookup table: %d", srl->ll_caps_size);
-  SENNA_message("srl: caps lookup table size: %d", srl->ll_caps_max_idx);
-  SENNA_message("srl: vector size in verb position lookup table: %d", srl->ll_posv_size);
-  SENNA_message("srl: verb position lookup table size: %d", srl->ll_posv_max_idx);
-  SENNA_message("srl: vector size in word position lookup table: %d", srl->ll_posw_size);
-  SENNA_message("srl: word position lookup table size: %d", srl->ll_posw_max_idx);
-  SENNA_message("srl: number of hidden units (convolution): %d", srl->hidden_state1_size);
-  SENNA_message("srl: number of hidden units (hidden layer): %d", srl->hidden_state3_size);
-  SENNA_message("srl: number of classes: %d", srl->output_state_size);
+  SENNA_message("srl: window size: %d", srl->window_size);		//@AureDi  3
+  SENNA_message("srl: vector size in word lookup table: %d", srl->ll_word_size);	//@AureDi  50
+  SENNA_message("srl: word lookup table size: %d", srl->ll_word_max_idx);			//@AureDi  130000
+  SENNA_message("srl: vector size in caps lookup table: %d", srl->ll_caps_size);	//@AureDi  5	
+  SENNA_message("srl: caps lookup table size: %d", srl->ll_caps_max_idx);			//@AureDi  5
+  SENNA_message("srl: vector size in verb position lookup table: %d", srl->ll_posv_size);		//@AureDi  5
+  SENNA_message("srl: verb position lookup table size: %d", srl->ll_posv_max_idx);				//@AureDi  12
+  SENNA_message("srl: vector size in word position lookup table: %d", srl->ll_posw_size);		//@AureDi  5
+  SENNA_message("srl: word position lookup table size: %d", srl->ll_posw_max_idx);				//@AureDi  12
+  SENNA_message("srl: number of hidden units (convolution): %d", srl->hidden_state1_size);		//@AureDi  300
+  SENNA_message("srl: number of hidden units (hidden layer): %d", srl->hidden_state3_size);		//@AureDi  500
+  SENNA_message("srl: number of classes: %d", srl->output_state_size);							//@AureDi  186
 
   return srl;
 }

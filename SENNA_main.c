@@ -14,6 +14,9 @@
 #include "SENNA_SRL.h"
 #include "SENNA_PSG.h"
 
+//#include<iostream>
+//using namespace std;
+
 /* fgets max sizes */
 #define MAX_SENTENCE_SIZE 1024
 #define MAX_TARGET_VB_SIZE 256
@@ -174,8 +177,8 @@ int main(int argc, char *argv[])	//@AureDi argc is number of arguments, argv is
     SENNA_CHK *chk = SENNA_CHK_new(opt_path, "data/chk.dat");
     SENNA_PT0 *pt0 = SENNA_PT0_new(opt_path, "data/pt0.dat");
     SENNA_NER *ner = SENNA_NER_new(opt_path, "data/ner.dat");
-    SENNA_VBS *vbs = SENNA_VBS_new(opt_path, "data/vbs.dat");
-    SENNA_SRL *srl = SENNA_SRL_new(opt_path, "data/srl.dat");	//@AureDi This is used for labeling.
+    SENNA_VBS *vbs = SENNA_VBS_new(opt_path, "data/vbs.dat");	//@AureDi 
+    SENNA_SRL *srl = SENNA_SRL_new(opt_path, "data/srl.dat");	//@AureDi This is used to initialize the parameters of neural newwork.
     SENNA_PSG *psg = SENNA_PSG_new(opt_path, "data/psg.dat");
 
     SENNA_Tokenizer *tokenizer = SENNA_Tokenizer_new(word_hash, caps_hash, suff_hash, gazt_hash, gazl_hash, gazm_hash, gazo_hash, gazp_hash, opt_usrtokens);
@@ -205,10 +208,11 @@ The content of the file example.txt as the primary source of data for myapplicat
     
       if(tokens->n == 0)
         continue;
-
+	  /*@AureDi  You need read it.*/
       pos_labels = SENNA_POS_forward(pos, tokens->word_idx, tokens->caps_idx, tokens->suff_idx, tokens->n);
       if(opt_chk)
         chk_labels = SENNA_CHK_forward(chk, tokens->word_idx, tokens->caps_idx, pos_labels, tokens->n);
+	  /*@AureDi  You need read it.*/
       if(opt_srl)
         pt0_labels = SENNA_PT0_forward(pt0, tokens->word_idx, tokens->caps_idx, pos_labels, tokens->n);
       if(opt_ner)
@@ -243,16 +247,20 @@ The content of the file example.txt as the primary source of data for myapplicat
         }
         else
         {
-          vbs_labels = SENNA_VBS_forward(vbs, tokens->word_idx, tokens->caps_idx, pos_labels, tokens->n);	//@AureDi   SENNA_VBS *vbs = SENNA_VBS_new(opt_path, "data/vbs.dat");
-          n_verbs = 0;
+			/*@AureDi  You need read it.*/
+          vbs_labels = SENNA_VBS_forward(vbs, tokens->word_idx, tokens->caps_idx, pos_labels, tokens->n);	//@AureDi  Read the vbs data.  SENNA_VBS *vbs = SENNA_VBS_new(opt_path, "data/vbs.dat");
+		 // SENNA_message("tokens->word_idx: %f tokens->caps_idx: %f  pos_labels: %f  tokens->n: %f ", *(tokens->word_idx), *(tokens->caps_idx), *(pos_labels), (tokens->n));
+		 // cout << "tokens->word_idx: " << *(tokens->word_idx) << " tokens->caps_idx: " << *(tokens->caps_idx) << "pos_labels: " << *(pos_labels) << "tokens->n: " << (tokens->n) << endl;
+		  n_verbs = 0;
           for(i = 0; i < tokens->n; i++)
           {
-            vbs_labels[i] = (vbs_labels[i] != vbs_hash_novb_idx);
+            vbs_labels[i] = (vbs_labels[i] != vbs_hash_novb_idx);	//@AureDi  vbs_hash_novb_idx = 22;
             n_verbs += vbs_labels[i];
           }
         }
       }
 
+	  /*@AureDi  You need read it.*/
       if(opt_srl) 
         srl_labels = SENNA_SRL_forward(srl, tokens->word_idx, tokens->caps_idx, pt0_labels, vbs_labels, tokens->n);
 
@@ -277,6 +285,7 @@ The content of the file example.txt as the primary source of data for myapplicat
         }
       }
 
+	  //@AureDi Print the sentence to file or console.
       for(i = 0; i < tokens->n; i++)
       {
         if(!opt_notokentags)
@@ -289,12 +298,16 @@ The content of the file example.txt as the primary source of data for myapplicat
           printf("\t%10s", SENNA_Hash_key(chk_hash, chk_labels[i]));
         if(opt_ner)
           printf("\t%10s", SENNA_Hash_key(ner_hash, ner_labels[i]));
+
+		/*@AureDi  You need read it.*/
         if(opt_srl)
         {
           printf("\t%15s", (vbs_labels[i] ? tokens->words[i] : "-"));
           for(j = 0; j < n_verbs; j++)
             printf("\t%10s", SENNA_Hash_key(srl_hash, srl_labels[j][i]));		//@ srl_hash stores the label for srl.
         }
+
+
         if(opt_psg) /* last, can be long */
         {
           printf("\t");
